@@ -1,2 +1,6 @@
 node_modules/
 .env
+
+# cache file on MacOS
+.DS_Store
+**/.DS_Store
