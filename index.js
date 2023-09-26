@@ -4,7 +4,7 @@ import dotenv from "dotenv"
 dotenv.config()
 const MongoClient = mongodb.MongoClient
 
-const port = process.env.PORT || 8000
+const port = process.env.PORT
 
 MongoClient.connect(
     process.env.SC_DB_URI,
