@@ -52,7 +52,13 @@ export default class Recipe_posts_DAO {
     }
 
     static async getPostById(postId) {
-        const query = { "id" : postId }
+        try {
+            postId = new ObjectId(postId)
+        } catch (e) {
+            console.error(`Invalid post id given: ${e}`)
+            // return []
+        }
+        const query = { "_id" :  postId}
         try {
             return await recipe_posts.findOne(query)
         } catch (e) {
@@ -64,7 +70,6 @@ export default class Recipe_posts_DAO {
     static async addPost(post, userID) {
         try {
             const new_post = {
-                id: post.id,
                 title: post.title,
                 description: post.description,
                 steps: post.steps,
@@ -81,37 +86,43 @@ export default class Recipe_posts_DAO {
         }
     }
 
-    static async updatePost(post, userId) {
-        try {
-            const updateResponse = await recipe_posts.updateOne(
-                {
-                    id: post.id,
-                    userId: new ObjectId(userId),
-                },
-                {
-                    $set: {
-                        title: post.title,
-                        description: post.description,
-                        steps: post.steps,
-                        ingredients: post.ingredients,
-                        totalPrice: post.totalPrice,
-                        photoURLs: post.photoURLs,
-                    }
-                }
-            )
+    // static async updatePost(post, userId) {
+    //     try {
+    //         const updateResponse = await recipe_posts.updateOne(
+    //             {
+    //                 _id: new ObjectId(post._id),
+    //                 userId: new ObjectId(userId),
+    //             },
+    //             {
+    //                 $set: {
+    //                     title: post.title,
+    //                     description: post.description,
+    //                     steps: post.steps,
+    //                     ingredients: post.ingredients,
+    //                     totalPrice: post.totalPrice,
+    //                     photoURLs: post.photoURLs,
+    //                 }
+    //             }
+    //         )
 
-            return updateResponse
-        } catch (e) {
-            console.error(`Unable to update post: ${e}`)
-            return { error : e }
-        }
-    }
+    //         return updateResponse
+    //     } catch (e) {
+    //         console.error(`Unable to update post: ${e}`)
+    //         return { error : e }
+    //     }
+    // }
 
     static async updatePostById(post, postId, userId) {
         try {
+            postId = new ObjectId(postId)
+        } catch (e) {
+            console.error(`Invalid post id given: ${e}`)
+            return { error : `Invalid post id given`}
+        }
+        try {
             const updateResponse = await recipe_posts.updateOne(
                 {
-                    id: postId,
+                    _id: postId,
                     userId: new ObjectId(userId),
                 },
                 {
@@ -125,7 +136,7 @@ export default class Recipe_posts_DAO {
                     }
                 }
             )
-
+            console.log(updateResponse)
             return updateResponse
         } catch (e) {
             console.error(`Unable to update post: ${e}`)
@@ -135,9 +146,15 @@ export default class Recipe_posts_DAO {
 
     static async deletePost(postId, userId) {
         try {
+            postId = new ObjectId(postId)
+        } catch (e) {
+            console.error(`Invalid post id given: ${e}`)
+            return { error : `Invalid post id given`}
+        }
+        try {
             const deleteResponse = await recipe_posts.deleteOne(
                 {
-                    id: postId,
+                    _id: postId,
                     userId: new ObjectId(userId),
                 }
             )
@@ -148,20 +165,4 @@ export default class Recipe_posts_DAO {
             return { error : e }
         }
     }
-
-    // static async deletePostById(postId, userId) {
-    //     try {
-    //         const deleteResponse = await recipe_posts.deleteOne(
-    //             {
-    //                 id: postId,
-    //                 userId: new ObjectId(userId),
-    //             }
-    //         )
-
-    //         return deleteResponse
-    //     } catch (e) {
-    //         console.error(`Unable to delete post: ${e}`)
-    //         return { error : e }
-    //     }
-    // }
 }

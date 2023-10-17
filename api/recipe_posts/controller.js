@@ -32,7 +32,7 @@ export default class Recipe_Posts_Controller {
     static async apiGetPostById(req, res, next) {
         try {
             const { postId } = req.params;
-            let post = await Recipe_posts_DAO.getPostById(Number(postId))
+            let post = await Recipe_posts_DAO.getPostById(postId)
             
             if (!post) {
                 throw new Error(
@@ -48,7 +48,6 @@ export default class Recipe_Posts_Controller {
 
     static async apiCreatePosts(req, res, next) {
         try {
-            const id = req.body.id
             const title = req.body.title
             const description = req.body.description
             const steps = req.body.steps
@@ -57,7 +56,6 @@ export default class Recipe_Posts_Controller {
             const photoURLs = req.body.photoURLs
 
             const post = {
-                id: id,
                 title: title,
                 description: description,
                 steps: steps,
@@ -79,7 +77,6 @@ export default class Recipe_Posts_Controller {
 
     static async apiUpdatePosts(req, res, next) {
         try {
-            const id = req.body.id
             const title = req.body.title
             const description = req.body.description
             const steps = req.body.steps
@@ -88,7 +85,6 @@ export default class Recipe_Posts_Controller {
             const photoURLs = req.body.photoURLs
 
             const post = {
-                id: id,
                 title: title,
                 description: description,
                 steps: steps,
@@ -97,14 +93,16 @@ export default class Recipe_Posts_Controller {
                 photoURLs: photoURLs,
             }
 
-            const postResponse = await Recipe_posts_DAO.updatePost(
+            const postResponse = await Recipe_posts_DAO.updatePostById(
                 post,
+                req.body._id,
                 req.body.userId,
             )
 
             var { error } = postResponse
             if (error) {
                 res.status(400).json({ error })
+                return 
             }
 
             if (postResponse.modifiedCount === 0) {
@@ -141,13 +139,14 @@ export default class Recipe_Posts_Controller {
             
             const postResponse = await Recipe_posts_DAO.updatePostById(
                 post,
-                Number(postId),
+                postId,
                 req.body.userId,
             )
 
             var { error } = postResponse
             if (error) {
                 res.status(400).json({ error })
+                return
             }
 
             if (postResponse.modifiedCount === 0) {
@@ -169,7 +168,7 @@ export default class Recipe_Posts_Controller {
             const userId = req.body.userId
 
             const postResponse = await Recipe_posts_DAO.deletePost(
-                Number(postId),
+                postId,
                 userId,
             )
             res.json({ status: "success" })
@@ -185,7 +184,7 @@ export default class Recipe_Posts_Controller {
             const userId = req.body.userId
 
             const postResponse = await Recipe_posts_DAO.deletePost(
-                Number(postId),
+                postId,
                 userId,
             )
             res.json({ status: "success" })
