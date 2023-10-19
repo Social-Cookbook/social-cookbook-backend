@@ -2,7 +2,6 @@ import UserDataDAO from "./userDAO.js";
 
 export default class User_Data_Controller{
     static async apiGetUsers(req, res, next){
-        console.log('here')
         const usersPerPage = req.query.usersPerPage ? parseInt(req.query.usersPerPage, 10) : 20
         const page = req.query.page ? parseInt(req.query.page, 10) : 0
 
@@ -32,16 +31,22 @@ export default class User_Data_Controller{
     static async apiCreateUsers(req, res, next){
         try{
             //creates all user data
-            const userID = req.body.id
+
+            //userID for create must be a number not string
+            const userID = req.body._id
             const name = req.body.name
             const username = req.body.username
             const password = req.body.password
-
+            const email = req.body.email
+            const bio = req.body.bio
+            
             const user = {
                 id: userID,
                 name: name,
                 username: username,
                 password: password,
+                email: email,
+                bio: bio,
             }
 
             const createUserResponse = await UserDataDAO.addUser(
@@ -57,16 +62,20 @@ export default class User_Data_Controller{
     static async apiUpdateUsers(req, res, next){
         try{
             //can update name, username, and password
-            const userID = req.body.id
+            const userID = req.body._id
             const name = req.body.name
             const username = req.body.username
             const password = req.body.password
+            const email = req.body.email
+            const bio = req.body.bio
 
             const user = {
                 id: userID,
                 name: name,
                 username: username,
                 password: password,
+                email: email,
+                bio: bio,
             }
 
             const updateUserResponse = await UserDataDAO.updateUser(

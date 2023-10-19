@@ -56,12 +56,14 @@ export default class UserDataDAO {
     static async addUser(user){
         try{
             const newUser = {
-                user_id: ObjectId(user.id),
-                user_name: user.name,
-                user_username: user.username,
-                user_password: user.password
+                _id: new ObjectId(user.id),
+                name: user.name,
+                username: user.username,
+                password: user.password,
+                email: user.email,
+                bio: user.bio,
             }
-            return await users.insertOne(newUser)
+            return await user_data.insertOne(newUser)
         }
         catch(e){
             console.error(`unable to post review: ${e}`)
@@ -71,18 +73,26 @@ export default class UserDataDAO {
 
     static async updateUser(user){
         try{
-            const updateResponse = await users.updateOne(
-                {user_id: ObjectId(user.id)},
-                { $set:{user_name: user.name, 
-                    user_username: user.username, 
-                    user_password: user.password}
+            const updateResponse = await user_data.updateOne(
+                {   _id: new ObjectId(user.id), 
+                    email: user.email
+                },
+                {   
+                    $set:{
+                        name: user.name, 
+                        username: user.username, 
+                        password: user.password,
+                        email: user.email,
+                        bio: user.bio,
+                    }
                 },
             )
+            console.log(new ObjectId(user.id))
             return updateResponse
     
         }
         catch(e){
-            console.error(`unable to update review ${e}`)
+            console.error(`user update error ${e}`)
             return {error: e}
         }
     }
