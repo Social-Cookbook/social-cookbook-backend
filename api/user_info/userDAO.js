@@ -56,6 +56,7 @@ export default class UserDataDAO {
     static async addUser(user){
         try{
             const newUser = {
+                //input must be a 24 character hex string, 12 byte Uint8Array, or an integer
                 _id: new ObjectId(user.id),
                 name: user.name,
                 username: user.username,
@@ -74,8 +75,7 @@ export default class UserDataDAO {
     static async updateUser(user){
         try{
             const updateResponse = await user_data.updateOne(
-                {   _id: new ObjectId(user.id), 
-                    email: user.email
+                {   _id: new ObjectId(user.id),
                 },
                 {   
                     $set:{
