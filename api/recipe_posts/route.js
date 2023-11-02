@@ -10,5 +10,7 @@ recipe_posts_router.route("/update").put(Recipe_Posts_Controller.apiUpdatePosts)
 recipe_posts_router.route("/:postId/update").put(Recipe_Posts_Controller.apiUpdatePostById);
 recipe_posts_router.route("/delete").delete(Recipe_Posts_Controller.apiDeletePosts);
 recipe_posts_router.route("/:postId/delete").delete(Recipe_Posts_Controller.apiDeletePostById);
+recipe_posts_router.route("/upload").post(Recipe_Posts_Controller.apiUploadImage);
+// recipe_posts_router.route("/upload").post(upload.single('image'));
 
 export default recipe_posts_router;
