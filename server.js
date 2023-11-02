@@ -10,23 +10,23 @@ AWS.config.update({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
 });
 
-const s3 = new AWS.S3();
+// const s3 = new AWS.S3();
 
 const app = express()
 
-const upload = multer({
-    storage: multerS3({
-        s3: s3,
-        bucket: 'social-cookbook-images',
-        key: function (req, file, cb) {
-            cb(null, Date.now().toString())
-        }
-    })
-});
+// const upload = multer({
+//     storage: multerS3({
+//         s3: s3,
+//         bucket: 'social-cookbook-images',
+//         key: function (req, file, cb) {
+//             cb(null, Date.now().toString())
+//         }
+//     })
+// });
 
-app.post('/upload', upload.single('image'), function (req, res, next) {
-    console.log(req.file.originalname);
-});
+// app.post('/upload', upload.single('image'), function (req, res, next) {
+//     console.log(req.file.originalname);
+// });
 
 
 app.use(cors())
