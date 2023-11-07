@@ -1,4 +1,7 @@
 import Recipe_posts_DAO from "./dao.js";
+// import multer from "multer"
+// import AWS from "aws-sdk"
+// import multerS3 from "multer-s3"
 
 export default class Recipe_Posts_Controller {
     static async apiGetPosts(req, res, next) {
@@ -193,6 +196,32 @@ export default class Recipe_Posts_Controller {
             res.status(500).json({ error: e.message })
         }
     }
+
+    // static async apiUploadImage(req, res, next) {
+    //     try {
+    //         AWS.config.update({
+    //             accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    //             secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+    //         });
+    //         const s3 = new AWS.S3();
+    //         const upload = multer({
+    //             storage: multerS3({
+    //                 s3: s3,
+    //                 bucket: 'social-cookbook-images',
+    //                 key: function (req, file, cb) {
+    //                     cb(null, Date.now().toString())
+    //                 }
+    //             })
+    //         });
+    //         // app.post('/upload', upload.single('image'), function (req, res, next) {
+    //         //     console.log(req.file.originalname);
+    //         // });
+    //         upload.single('image');
+    //         res.json({ status: "success" })
+    //     } catch (e) {
+    //         res.status(500).json({ error: e.message })
+    //     }
+    // }
 
     static async apiGetPostByUserId(req, res, next) {
         try {
