@@ -2,26 +2,31 @@ import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema({
-  email: {
+  name: {
     type: String,
-    required: [true, "Your email address is required"],
-    unique: true,
+    default: "New user",
   },
   username: {
     type: String,
-    required: [true, "Your username is required"],
+    default: "cookbook_default_username",
+    // required: [true, "Your username is required"],
   },
   password: {
     type: String,
     required: [true, "Your password is required"],
   },
-  createdAt: {
-    type: Date,
-    default: new Date(),
+  email: {
+    type: String,
+    required: [true, "Your email address is required"],
+    unique: true,
   },
   bio: {
     type: String,
     default: "This is my bio",
+  },
+  createdAt: {
+    type: Date,
+    default: new Date(),
   },
 });
 
