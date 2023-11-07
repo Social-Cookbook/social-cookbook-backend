@@ -1,12 +1,21 @@
 import app from "./server.js"
 import mongodb from "mongodb"
 import dotenv from "dotenv"
+import mongoose from "mongoose"
 import Recipe_posts_DAO from "./api/recipe_posts/dao.js"
 
 dotenv.config()
 const MongoClient = mongodb.MongoClient
 
 const port = process.env.PORT
+
+mongoose
+    .connect(process.env.SC_DB_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    })
+    .then(() => console.log("MongoDB is  connected successfully"))
+    .catch((err) => console.error(err));
 
 MongoClient.connect(
     process.env.SC_DB_URI,
