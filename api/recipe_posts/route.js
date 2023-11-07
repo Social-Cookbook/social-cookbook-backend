@@ -33,5 +33,6 @@ recipe_posts_router.route("/upload").post(upload.single('image'), function (req,
     console.log(req.file.originalname);
     res.json({ status: "success" });
 });
+recipe_posts_router.route("/user/:userId").get(Recipe_Posts_Controller.apiGetPostByUserId);
 
 export default recipe_posts_router;

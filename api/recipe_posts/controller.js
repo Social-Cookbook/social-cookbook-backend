@@ -222,4 +222,25 @@ export default class Recipe_Posts_Controller {
     //         res.status(500).json({ error: e.message })
     //     }
     // }
+
+    static async apiGetPostByUserId(req, res, next) {
+        try {
+            const { userId } = req.params;
+            const { postsList, numPosts } = await Recipe_posts_DAO.getPostByUserId(userId)
+            
+            if (!postsList) {
+                throw new Error(
+                    `Unable to get posts by user ${userId} as user may not exist`
+                )
+            }
+            
+            let response = {
+                postList : postsList,
+                numPosts : numPosts,
+            }
+            res.json(response)
+        } catch (e) {
+            res.status(404).json({ error: e.message })
+        }
+    }
 }
