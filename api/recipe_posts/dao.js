@@ -165,4 +165,33 @@ export default class Recipe_posts_DAO {
             return { error : e }
         }
     }
+
+    static async getPostByUserId(userId) {
+        try {
+            userId = new ObjectId(userId)
+        } catch (e) {
+            console.error(`Invalid user id given: ${e}`)
+        }
+
+        const query = { "userId" :  userId }
+        let cursor
+
+        try {
+            cursor = await recipe_posts.find(query)
+
+        } catch (e) {
+            console.error(`Unable to issue find command: ${e}`)
+            return []
+        }
+
+        try {
+            const postsList = await cursor.toArray()
+            const numPosts = await recipe_posts.countDocuments(query)
+
+            return { postsList, numPosts }
+        } catch (e) {
+            console.error(`Unable to convert cursor to array or problem counting documents, ${e}`)
+            return { postsList: [], totalNumPosts: 0 }
+        }
+    }
 }
