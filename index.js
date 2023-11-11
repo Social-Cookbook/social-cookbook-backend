@@ -23,6 +23,7 @@ MongoClient.connect(process.env.SC_DB_URI, {
     await UserDataDAO.injectDB(client);
     await Recipe_posts_DAO.injectDB(client);
     await Followers_DAO.injectDB(client);
+    await Following_DAO.injectDB(client);
   });
 
 mongoose
