@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import Recipe_posts_DAO from "./api/recipe_posts/dao.js";
 import UserDataDAO from "./api/user_info/userDAO.js";
 import Followers_DAO from "./api/followers/followersDAO.js";
+import Following_DAO from "./api/following/followingDAO.js";
 dotenv.config();
 const MongoClient = mongodb.MongoClient;
 

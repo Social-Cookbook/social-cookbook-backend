@@ -6,6 +6,7 @@ import cors from "cors";
 import recipe_posts_router from "./api/recipe_posts/route.js";
 import user_info_router from "./api/user_info/route.js";
 import followers_info_router from "./api/followers/followersRoute.js";
+import following_info_router from "./api/following/followingRoute.js";
 
 
 const app = express()

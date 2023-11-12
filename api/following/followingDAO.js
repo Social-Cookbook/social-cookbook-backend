@@ -66,4 +66,38 @@ export default class Following_DAO {
             return []
         }
     }
+
+    static async putNewFollowing(followingId, userId) {
+        try {
+            userId = new ObjectId(userId)
+            followingId = new ObjectId(followingId)
+        } catch (e) {
+            console.error('Invalid user id given: ' + e)
+            return { error: 'Invalid user id given (both must be 24-digit hex strings)' }
+        }
+        try {
+            const updateResponse = await following_data.updateOne(
+                {
+                    user: userId,
+                },
+                {
+                    /*
+                    $push: {
+                        followers: doc.followers,
+                    }
+                    */
+
+                    $addToSet: {
+                        follows: followingId,
+                    }
+                }
+            )
+
+            console.log(updateResponse)
+            return updateResponse
+        } catch (e) {
+            console.error('Unable to add new follower: ' + e)
+            return { error : e }
+        }
+    }
 }
