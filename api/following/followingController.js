@@ -49,7 +49,7 @@ export default class Following_Data_Controller {
     static async apiPutNewFollowingByUserId(req, res, next) {
         try {
             const { userId } = req.params;              //your user id
-            const followingId = req.body.yourId        //id of you user your are following     
+            const followingId = req.body.following        //id of the user you are following   
             
             const putResponse = await Following_DAO.putNewFollowing(
                 followingId,

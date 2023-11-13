@@ -100,7 +100,7 @@ export default class Followers_Data_Controller {
     static async apiPutNewFollowerByUserId(req, res, next) {
         try {
             const { userId } = req.params;              //id of the person you want to follow - will be in route
-            const yourObjId = req.body.yourId        //your user id - you will supply your id in your put request      
+            const yourObjId = req.body.follower        //your user id - you are the follower     
             
             const putResponse = await Followers_DAO.putNewFollower(
                 yourObjId,
