@@ -45,4 +45,88 @@ export default class Followers_Data_Controller {
             res.status(404).json({ error: e.message })
         }
     }
+
+    static async apiCreateEntry(req, res, next) {
+        try {
+            const userId = req.body.user
+            const followers = req.body.followers
+
+            const entry = {
+                user: userId,
+                followers: followers,
+            }
+
+            const createResponse = await Followers_DAO.addFollowerEntry(entry)
+
+            res.json({ status : "success" })
+        } catch (e) {
+            res.status(500).json({ error: e.message })
+        }
+    }
+
+    static async apiUpdateFollowersByUserId(req, res, next) {
+        try {
+            const { userId } = req.params;
+            const followers = req.body.followers
+
+            const docu = {
+                followers: followers,
+            }
+            
+            const updateResponse = await Followers_DAO.updateFollowersByUserId(
+                docu,
+                userId,
+            )
+
+            var { error } = updateResponse
+            if (error) {
+                res.status(400).json({ error })
+                return
+            }
+
+            if (updateResponse.modifiedCount === 0) {
+                throw new Error (
+                    "Unable to update - user id might not exist.",
+                )
+            }
+        
+            res.json({ status: "success" })
+
+        } catch (e) {
+            res.status(404).json({ error: e.message })
+        }
+    }
+
+    static async apiPutNewFollowerByUserId(req, res, next) {
+        try {
+            const { userId } = req.params;              //id of the person you want to follow - will be in route
+            const yourObjId = req.body.follower        //your user id - you are the follower     
+            
+            const putResponse = await Followers_DAO.putNewFollower(
+                yourObjId,
+                userId,
+            )
+            
+            var { error } = putResponse
+            if (error) {
+                res.status(400).json({ error })
+                return
+            }
+
+            if (putResponse.modifiedCount === 0 && putResponse.matchedCount === 1) {
+                throw new Error (
+                    "Unable to put new follower - follower already exists",
+                )
+            } else if (putResponse.modifiedCount === 0) {
+                throw new Error (
+                    "Unable to put new follower - user may not be the original follower",
+                )
+            }
+
+            res.json({ status: "success" })
+
+        } catch (e) {
+            res.status(500).json({ error: e.message })
+        }
+    }
 }
