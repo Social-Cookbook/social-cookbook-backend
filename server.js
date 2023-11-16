@@ -11,7 +11,12 @@ import following_info_router from "./api/following/followingRoute.js";
 
 const app = express()
 
-app.use(cors())
+const corsOptions = {
+    origin: 'http://localhost:3001', // The exact origin of the frontend
+    credentials: true, // This allows the server to accept cookies from the frontend
+};
+
+app.use(cors(corsOptions))
 app.use(express.json())
 
 app.use(cookieParser());
