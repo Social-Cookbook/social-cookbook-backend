@@ -1,4 +1,8 @@
 import mongodb from 'mongodb'
+import Following_DAO from '../following/followingDAO.js'
+import Followers_DAO from '../followers/followersDAO.js'
+import Recipe_posts_DAO from "../recipe_posts/dao.js"
+
 const ObjectId = mongodb.ObjectId
 
 let user_data
@@ -53,6 +57,22 @@ export default class UserDataDAO {
         }
     }
 
+    static async getUserById(userId) {
+        try {
+            userId = new ObjectId(userId)
+        } catch (e) {
+            console.error(`Invalid user id given: ${e}`)
+            // return []
+        }
+        const query = { "_id" :  userId}
+        try {
+            return await user_data.findOne(query)
+        } catch (e) {
+            console.error(`Unable to issue find command: ${e}`)
+            return []
+        }
+    }
+
     static async addUser(user){
         try{
             const newUser = {
@@ -97,18 +117,40 @@ export default class UserDataDAO {
         }
     }
 
-    static async getUserById(userId) {
-        try {
-            userId = new ObjectId(userId)
-        } catch (e) {
-            console.error('Invalid user id given: ${e}')
+    static async getUserPageInfoById(userId) {
+        let user = await this.getUserById(userId);
+        let user_followers = await Followers_DAO.getFollowersByUserId(userId)
+        let user_following = await Following_DAO.getFollowingByUserId(userId)
+        let numFollowers
+        if (user_followers) {
+            numFollowers = user_followers.followers.length
+        } else {
+            numFollowers = 0
         }
-        const query = { "_id" : userId}
-        try {
-            return await user_data.findOne(query)
-        } catch (e) {
-            console.error('Unable to issue find command: ${e}')
-            return []
+        let numFollowing
+        if (user_following) {
+            numFollowing = user_following.follows.length
+        } else {
+            numFollowing = 0
         }
+
+        let { postsList, numPosts } = await Recipe_posts_DAO.getPostByUserId(userId)
+
+        if (!postsList) {
+            postsList = []
+        }
+        if (!numPosts) {
+            numPosts = 0
+        }
+
+        let userInfo = {
+            username : user.username,
+            profile_picture : null,
+            num_followers : numFollowers,
+            num_following : numFollowing,
+            posts : postsList,
+            num_posts : numPosts,
+        }
+        return userInfo;
     }
 }
