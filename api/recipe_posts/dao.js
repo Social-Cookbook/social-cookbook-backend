@@ -194,4 +194,28 @@ export default class Recipe_posts_DAO {
             return { postsList: [], totalNumPosts: 0 }
         }
     }
+
+    static async getPostByUserFollowing(followingArray) {
+        
+        const query = { "userId" :  { $in: followingArray} }  //this needs to be modified somehow...
+        let cursor
+
+        try {
+            cursor = await recipe_posts.find(query)
+
+        } catch (e) {
+            console.error(`Unable to issue find command: ${e}`)
+            return []
+        }
+
+        try {
+            const postsList = await cursor.toArray()
+            const numPosts = await recipe_posts.countDocuments(query)
+
+            return { postsList, numPosts }
+        } catch (e) {
+            console.error(`Unable to convert cursor to array or problem counting documents, ${e}`)
+            return { postsList: [], totalNumPosts: 0 }
+        }
+    }
 }
