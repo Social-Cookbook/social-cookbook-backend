@@ -53,6 +53,22 @@ export default class UserDataDAO {
         }
     }
 
+    static async getUserById(userId) {
+        try {
+            userId = new ObjectId(userId)
+        } catch (e) {
+            console.error(`Invalid user id given: ${e}`)
+            // return []
+        }
+        const query = { "_id" :  userId}
+        try {
+            return await user_data.findOne(query)
+        } catch (e) {
+            console.error(`Unable to issue find command: ${e}`)
+            return []
+        }
+    }
+
     static async addUser(user){
         try{
             const newUser = {

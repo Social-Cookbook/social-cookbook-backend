@@ -27,6 +27,23 @@ export default class User_Data_Controller{
         }
         res.json(response)
     }
+
+    static async apiGetUserById(req, res, next) {
+        try {
+            const { userId } = req.params;
+            let user = await UserDataDAO.getUserById(userId)
+            
+            if (!user) {
+                throw new Error(
+                    `Unable to get user with id ${userId} as it may not exist`
+                )
+            }
+
+            res.json(user)
+        } catch (e) {
+            res.status(404).json({ error: e.message })
+        }
+    }
     
     static async apiCreateUsers(req, res, next){
         try{
