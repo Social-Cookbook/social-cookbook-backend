@@ -1,4 +1,6 @@
-import Recipe_posts_DAO from "./dao.js";
+import Recipe_posts_DAO from "../recipe_posts/dao.js";
+import Following_DAO from "../following/followingDAO.js";
+
 // import multer from "multer"
 // import AWS from "aws-sdk"
 // import multerS3 from "multer-s3"
@@ -227,6 +229,55 @@ export default class Recipe_Posts_Controller {
         try {
             const { userId } = req.params;
             const { postsList, numPosts } = await Recipe_posts_DAO.getPostByUserId(userId)
+            
+            if (!postsList) {
+                throw new Error(
+                    `Unable to get posts by user ${userId} as user may not exist`
+                )
+            }
+            
+            let response = {
+                postList : postsList,
+                numPosts : numPosts,
+            }
+            res.json(response)
+        } catch (e) {
+            res.status(404).json({ error: e.message })
+        }
+    }
+
+    static async apiGetOnlyFollowing(req, res, next) {
+        try {
+            const { userId } = req.params;
+            let user = await Following_DAO.getFollowingByUserId(userId)
+            
+            if (!user) {
+                throw new Error(
+                    `Unable to get following for user with id ${userId} as it may not exist`
+                )
+            }
+            let followingList = user.follows
+            console.log(followingList)
+            res.json(followingList)
+        } catch (e) {
+            res.status(404).json({ error: e.message })
+        }
+    }
+
+    static async apiGetPostByFollowingList(req, res, next) {
+        try {
+            const { userId } = req.params;
+            let user = await Following_DAO.getFollowingByUserId(userId)
+            
+            if (!user) {
+                throw new Error(
+                    `Unable to get following for user with id ${userId} as it may not exist`
+                )
+            }
+
+            let followingList = user.follows
+
+            const { postsList, numPosts } = await Recipe_posts_DAO.getPostByUserFollowing(followingList)
             
             if (!postsList) {
                 throw new Error(
