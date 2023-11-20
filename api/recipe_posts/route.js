@@ -4,6 +4,8 @@ import multer from "multer"
 import AWS from "aws-sdk"
 import multerS3 from "multer-s3"
 
+import userVerification from "../user_system/AuthMiddleware.js";
+
 const recipe_posts_router = express.Router();
 
 AWS.config.update({
@@ -23,7 +25,7 @@ const upload = multer({
 
 recipe_posts_router.route("/").get(Recipe_Posts_Controller.apiGetPosts);
 recipe_posts_router.route("/:postId").get(Recipe_Posts_Controller.apiGetPostById);
-recipe_posts_router.route("/create").post(Recipe_Posts_Controller.apiCreatePosts);
+recipe_posts_router.post("/create", userVerification, Recipe_Posts_Controller.apiCreatePosts);
 recipe_posts_router.route("/update").put(Recipe_Posts_Controller.apiUpdatePosts);
 recipe_posts_router.route("/:postId/update").put(Recipe_Posts_Controller.apiUpdatePostById);
 recipe_posts_router.route("/delete").delete(Recipe_Posts_Controller.apiDeletePosts);
