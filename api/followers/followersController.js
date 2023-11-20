@@ -129,4 +129,22 @@ export default class Followers_Data_Controller {
             res.status(500).json({ error: e.message })
         }
     }
+
+    static async apiGetFollowersNumber(req, res, next) {
+        try {
+            const { userId } = req.params;
+            let user = await Followers_DAO.getFollowersByUserId(userId)
+            
+            if (!user) {
+                throw new Error(
+                    `Unable to get following for user with id ${userId} as it may not exist`
+                )
+            }
+            let followersList = user.followers
+            let numFollowers = followersList.length
+            res.json(numFollowers)
+        } catch (e) {
+            res.status(404).json({ error: e.message })
+        }
+    }
 }
