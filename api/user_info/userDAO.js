@@ -96,4 +96,19 @@ export default class UserDataDAO {
             return {error: e}
         }
     }
+
+    static async getUserById(userId) {
+        try {
+            userId = new ObjectId(userId)
+        } catch (e) {
+            console.error('Invalid user id given: ${e}')
+        }
+        const query = { "_id" : userId}
+        try {
+            return await user_data.findOne(query)
+        } catch (e) {
+            console.error('Unable to issue find command: ${e}')
+            return []
+        }
+    }
 }
