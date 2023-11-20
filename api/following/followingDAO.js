@@ -35,7 +35,7 @@ export default class Following_DAO {
         try {
             cursor = await following_data.find(query)
         } catch (e) {
-            console.error('Unable to issue find command: ${e}')
+            console.error('Unable to issue find command: ' + e)
             return { userFollowingList: [], numUsers: 0 }
         }
 
@@ -56,13 +56,15 @@ export default class Following_DAO {
         try {
             userId = new ObjectId(userId)
         } catch (e) {
-            console.error('Invalid user id given: ${e}')
+            console.error('Invalid user id given: ' + e)
         }
-        const query = { "user" : userId}
+
+        const query = { "user" : userId} 
+
         try {
             return await following_data.findOne(query)
         } catch (e) {
-            console.error('Unable to issue find command: ${e}')
+            console.error('Unable to issue find command: ' + e)
             return []
         }
     }
