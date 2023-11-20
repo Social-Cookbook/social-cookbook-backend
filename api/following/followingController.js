@@ -96,4 +96,23 @@ export default class Following_Data_Controller {
             res.status(500).json({ error: e.message })
         }
     }
+
+    static async apiGetFollowingNumber(req, res, next) {
+        try {
+            const { userId } = req.params;
+            let user = await Following_DAO.getFollowingByUserId(userId)
+            
+            if (!user) {
+                throw new Error(
+                    `Unable to get following for user with id ${userId} as it may not exist`
+                )
+            }
+            let followingList = user.follows
+            let numFollowing = followingList.length
+            res.json(numFollowing)
+        } catch (e) {
+            res.status(404).json({ error: e.message })
+        }
+    }
+
 }
