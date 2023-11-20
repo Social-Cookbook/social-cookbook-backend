@@ -1,5 +1,7 @@
 import express from 'express';
-import Recipe_Posts_Controller from "./controller.js"
+import Recipe_Posts_Controller from "../recipe_posts/controller.js"
+import Following_Data_Controller from "../following/followingController.js"
+
 import multer from "multer"
 import AWS from "aws-sdk"
 import multerS3 from "multer-s3"
@@ -23,7 +25,13 @@ const upload = multer({
     })
 });
 
+
 recipe_posts_router.route("/").get(Recipe_Posts_Controller.apiGetPosts);
+
+//Testing using another controller (Following_Data_Controller): disregard these (they work)
+//recipe_posts_router.route("/").get(Following_Data_Controller.apiGetFollowing);
+//recipe_posts_router.route("/followingonly/:userId").get(Following_Data_Controller.apiGetOnlyFollowing)
+
 recipe_posts_router.route("/:postId").get(Recipe_Posts_Controller.apiGetPostById);
 recipe_posts_router.post("/create", userVerification, Recipe_Posts_Controller.apiCreatePosts);
 recipe_posts_router.route("/update").put(Recipe_Posts_Controller.apiUpdatePosts);
@@ -43,5 +51,9 @@ recipe_posts_router.route("/upload").post(upload.any('images'), function (req, r
     res.json({ status: "success", urls: urls });
 });
 recipe_posts_router.route("/user/:userId").get(Recipe_Posts_Controller.apiGetPostByUserId);
+
+//routes utilizing controller functions that rely on followingDAO.js
+recipe_posts_router.route("/followingonly/:userId").get(Recipe_Posts_Controller.apiGetOnlyFollowing);
+recipe_posts_router.route("/followingposts/:userId").get(Recipe_Posts_Controller.apiGetPostByFollowingList);
 
 export default recipe_posts_router;

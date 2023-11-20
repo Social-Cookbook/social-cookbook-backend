@@ -1,4 +1,4 @@
-import Following_DAO from "./followingDAO.js";
+import Following_DAO from "../following/followingDAO.js";
 
 export default class Following_Data_Controller {
     static async apiGetFollowing(req, res, next) {
@@ -41,6 +41,24 @@ export default class Following_Data_Controller {
             }
 
             res.json(user)
+        } catch (e) {
+            res.status(404).json({ error: e.message })
+        }
+    }
+
+    static async apiGetOnlyFollowing(req, res, next) {
+        try {
+            const { userId } = req.params;
+            let user = await Following_DAO.getFollowingByUserId(userId)
+            
+            if (!user) {
+                throw new Error(
+                    `Unable to get following for user with id ${userId} as it may not exist`
+                )
+            }
+            let followingList = user.follows
+            console.log(followingList)
+            res.json(followingList)
         } catch (e) {
             res.status(404).json({ error: e.message })
         }
