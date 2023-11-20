@@ -9,5 +9,6 @@ followers_router.route("/create").post(Followers_Data_Controller.apiCreateEntry)
 followers_router.route("/:userId/update").put(Followers_Data_Controller.apiUpdateFollowersByUserId)
 //followers_router.route("/:followId/:yourId/follow").put(Followers_Data_Controller.apiPutNewFollowerByUserId)
 followers_router.route("/:userId/follow").put(Followers_Data_Controller.apiPutNewFollowerByUserId)
+followers_router.route("/numFollowers/:userId").get(Followers_Data_Controller.apiGetFollowersNumber)
 
 export default followers_router;
