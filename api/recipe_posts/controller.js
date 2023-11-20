@@ -66,7 +66,7 @@ export default class Recipe_Posts_Controller {
                 totalPrice: totalPrice,
                 photoURLs: photoURLs,
             }
-            const userId = req.body.userId
+            const userId = res.locals.userId
 
             const postResponse = await Recipe_posts_DAO.addPost(
                 post,
