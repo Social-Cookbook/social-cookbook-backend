@@ -54,9 +54,7 @@ export default class Followers_DAO {
 
     static async getFollowersByUserId(userId) {
         try {
-            console.log(userId)
             var userObjId = new ObjectId(userId);
-            console.log(userObjId)
         } catch (e) {
             console.error('Invalid user id given: ' + e)
         }
