@@ -118,7 +118,7 @@ export default class User_Data_Controller{
     static async apiGetUserPageInfoById(req, res, next) {
 
         try {
-            const { userId } = req.params;
+            const userId = res.locals.userId;
             let user = await UserDataDAO.getUserPageInfoById(userId)
             
             if (!user) {

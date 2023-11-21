@@ -7,7 +7,7 @@ import Following_DAO from "../following/followingDAO.js";
 
 export default class Recipe_Posts_Controller {
     static async apiGetPosts(req, res, next) {
-        const postsPerPage = req.query.postsPerPage ? parseInt(req.query.postsPerPage, 10) : 20
+        const postsPerPage = req.query.postsPerPage ? parseInt(req.query.postsPerPage, 10) : 100
         const page = req.query.page ? parseInt(req.query.page, 10) : 0
 
         let filters = {}
