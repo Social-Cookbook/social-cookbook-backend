@@ -67,11 +67,13 @@ export default class Followers_DAO {
         }
     }
 
-    static async addFollowerEntry(doc) {
+    static async addFollowerEntryNewUser(userId) {
         try {
+            let emptyArray = [];
+
             const new_entry = {
-                user: doc.user,
-                followers: doc.followers,
+                user: userId,
+                followers: emptyArray,
             }
 
             return await followers_data.insertOne(new_entry)
