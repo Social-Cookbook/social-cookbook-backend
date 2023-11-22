@@ -72,7 +72,7 @@ export default class User_Data_Controller{
 
             const createFollowerEntry = await Followers_DAO.addFollowerEntryNewUser(userID)
 
-            const createFollowingEntry = Following_DAO.addFollowingEntryNewUser(userID)
+            const createFollowingEntry = await Following_DAO.addFollowingEntryNewUser(userID)
 
             res.json({status: "success"})
         }
