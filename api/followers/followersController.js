@@ -1,4 +1,4 @@
-import Followers_DAO from "./followersDAO.js";
+import Followers_DAO from "../followers/followersDAO.js";
 
 export default class Followers_Data_Controller {
     static async apiGetFollowers(req, res, next) {
