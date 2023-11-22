@@ -266,7 +266,7 @@ export default class Recipe_Posts_Controller {
 
     static async apiGetPostByFollowingList(req, res, next) {
         try {
-            const { userId } = req.params;
+            const userId = res.locals.userId;
             let user = await Following_DAO.getFollowingByUserId(userId)
             
             if (!user) {
