@@ -54,6 +54,6 @@ recipe_posts_router.route("/user/:userId").get(Recipe_Posts_Controller.apiGetPos
 
 //routes utilizing controller functions that rely on followingDAO.js
 recipe_posts_router.route("/followingonly/:userId").get(Recipe_Posts_Controller.apiGetOnlyFollowing);
-recipe_posts_router.route("/followingposts/:userId").get(Recipe_Posts_Controller.apiGetPostByFollowingList);
+recipe_posts_router.post("/followingposts", userVerification, Recipe_Posts_Controller.apiGetPostByFollowingList);
 
 export default recipe_posts_router;
