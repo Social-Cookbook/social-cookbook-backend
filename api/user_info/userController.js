@@ -1,4 +1,6 @@
-import UserDataDAO from "./userDAO.js";
+import UserDataDAO from "../user_info/userDAO.js";
+import Followers_DAO from "../followers/followersDAO.js";
+import Following_DAO from "../following/followingDAO.js";
 
 export default class User_Data_Controller{
     static async apiGetUsers(req, res, next){
@@ -66,9 +68,12 @@ export default class User_Data_Controller{
                 bio: bio,
             }
 
-            const createUserResponse = await UserDataDAO.addUser(
-                user
-            )
+            const createUserResponse = await UserDataDAO.addUser(user)
+
+            const createFollowerEntry = await Followers_DAO.addFollowerEntryNewUser(userID)
+
+            const createFollowingEntry = await Following_DAO.addFollowingEntryNewUser(userID)
+
             res.json({status: "success"})
         }
         catch(e){

@@ -69,6 +69,22 @@ export default class Following_DAO {
         }
     }
 
+    static async addFollowingEntryNewUser(userId) {
+        try {
+            let emptyArray = [];
+
+            const new_entry = {
+                user: userId,
+                follows: emptyArray,
+            }
+
+            return await following_data.insertOne(new_entry)
+        } catch (e) {
+            console.error('Unable to create new following entry')
+            return { error : e }
+        }
+    }
+
     static async putNewFollowing(followingId, userId) {
         try {
             userId = new ObjectId(userId)
