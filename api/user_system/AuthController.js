@@ -1,6 +1,8 @@
 import User from "./UserModel.js";
 import createSecretToken from "./SecretToken.js";
 import bcrypt from "bcryptjs";
+import Followers_DAO from "../followers/followersDAO.js";
+import Following_DAO from "../following/followingDAO.js";
 
 export const Signup = async (req, res, next) => {
   try {
@@ -15,6 +17,10 @@ export const Signup = async (req, res, next) => {
       withCredentials: true,
       httpOnly: false,
     });
+
+    const createFollowerEntry = await Followers_DAO.addFollowerEntryNewUser(user._id)
+    const createFollowingEntry = await Following_DAO.addFollowingEntryNewUser(user._id)
+
     res
       .status(201)
       .json({ message: "User signed in successfully", success: true, user });
