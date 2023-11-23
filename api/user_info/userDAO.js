@@ -117,7 +117,7 @@ export default class UserDataDAO {
         }
     }
 
-    static async getUserPageInfoById(userId) {
+    static async getUserPageInfoById(userId, isCurrentUser) {
         let user = await this.getUserById(userId);
         let user_followers = await Followers_DAO.getFollowersByUserId(userId)
         let user_following = await Following_DAO.getFollowingByUserId(userId)
@@ -150,6 +150,7 @@ export default class UserDataDAO {
             num_following : numFollowing,
             posts : postsList,
             num_posts : numPosts,
+						is_current_user: isCurrentUser
         }
         return userInfo;
     }
