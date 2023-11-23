@@ -119,7 +119,8 @@ export default class User_Data_Controller{
 
         try {
             const userId = res.locals.userId;
-            let user = await UserDataDAO.getUserPageInfoById(userId)
+						const passedInUserId = req.params.userId;
+						let user = await UserDataDAO.getUserPageInfoById(passedInUserId ? passedInUserId : userId, passedInUserId == userId || !passedInUserId);
             
             if (!user) {
                 throw new Error(
