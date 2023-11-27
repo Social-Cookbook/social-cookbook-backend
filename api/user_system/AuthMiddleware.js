@@ -4,6 +4,7 @@ import dotenv from "dotenv"
 dotenv.config()
 
 const userVerification = (req, res, next) => {
+  console.log("userVerification")
   const token = req.cookies.token
   if (!token) {
     return res.json({ status: false })
