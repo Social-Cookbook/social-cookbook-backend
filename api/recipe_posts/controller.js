@@ -58,6 +58,9 @@ export default class Recipe_Posts_Controller {
             const steps = req.body.steps
             const ingredients = req.body.ingredients
             const totalPrice = req.body.totalPrice
+            const calories = req.body.calories
+            const servings = req.body.servings
+            const cookTime = req.body.cookTime
             const photoURLs = req.body.photoURLs
 
             const post = {
@@ -66,6 +69,9 @@ export default class Recipe_Posts_Controller {
                 steps: steps,
                 ingredients: ingredients,
                 totalPrice: totalPrice,
+                calories: calories,
+                servings: servings,
+                cookTime: cookTime,
                 photoURLs: photoURLs,
             }
             const userId = res.locals.userId
@@ -87,6 +93,9 @@ export default class Recipe_Posts_Controller {
             const steps = req.body.steps
             const ingredients = req.body.ingredients
             const totalPrice = req.body.totalPrice
+            const calories = req.body.calories
+            const servings = req.body.servings
+            const cookTime = req.body.cookTime
             const photoURLs = req.body.photoURLs
 
             const post = {
@@ -95,6 +104,9 @@ export default class Recipe_Posts_Controller {
                 steps: steps,
                 ingredients: ingredients,
                 totalPrice: totalPrice,
+                calories: calories,
+                servings: servings,
+                cookTime: cookTime,
                 photoURLs: photoURLs,
             }
 
@@ -131,6 +143,9 @@ export default class Recipe_Posts_Controller {
             const steps = req.body.steps
             const ingredients = req.body.ingredients
             const totalPrice = req.body.totalPrice
+            const calories = req.body.calories
+            const servings = req.body.servings
+            const cookTime = req.body.cookTime
             const photoURLs = req.body.photoURLs
 
             const post = {
@@ -139,6 +154,9 @@ export default class Recipe_Posts_Controller {
                 steps: steps,
                 ingredients: ingredients,
                 totalPrice: totalPrice,
+                calories: calories,
+                servings: servings,
+                cookTime: cookTime,
                 photoURLs: photoURLs,
             }
             
