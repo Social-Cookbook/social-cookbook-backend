@@ -82,15 +82,15 @@ export default class Following_Data_Controller {
                 return
             }
 
-            // if (putResponse.modifiedCount === 0 && putResponse.matchedCount === 1) {
-            //     throw new Error (
-            //         "Unable to put new follower - follower already exists",
-            //     )
-            // } else if (putResponse.modifiedCount === 0) {
-            //     throw new Error (
-            //         "Unable to put new follower - user may not be the original follower",
-            //     )
-            // }
+            if (putResponse.modifiedCount === 0 && putResponse.matchedCount === 1) {
+                throw new Error (
+                    "Unable to put new follower - follower already exists",
+                )
+            } else if (putResponse.modifiedCount === 0) {
+                throw new Error (
+                    "Unable to put new follower - user may not be the original follower",
+                )
+            }
 
             res.json({ status: "success" })
 

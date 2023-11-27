@@ -14,7 +14,7 @@ export default class Followers_Data_Controller {
 
         const { userFollowersList, numUsers } = await Followers_DAO.getFollowers({
             filters,
-            page, 
+            page,
             usersPerPage,
         })
 
@@ -33,7 +33,7 @@ export default class Followers_Data_Controller {
         try {
             const { userId } = req.params;
             let user = await Followers_DAO.getFollowersByUserId(userId)
-            
+
             if (!user) {
                 throw new Error(
                     `Unable to get followers for user with id ${userId} as it may not exist`
@@ -58,7 +58,7 @@ export default class Followers_Data_Controller {
 
             const createResponse = await Followers_DAO.addFollowerEntry(entry)
 
-            res.json({ status : "success" })
+            res.json({ status: "success" })
         } catch (e) {
             res.status(500).json({ error: e.message })
         }
@@ -72,7 +72,7 @@ export default class Followers_Data_Controller {
             const docu = {
                 followers: followers,
             }
-            
+
             const updateResponse = await Followers_DAO.updateFollowersByUserId(
                 docu,
                 userId,
@@ -85,11 +85,11 @@ export default class Followers_Data_Controller {
             }
 
             if (updateResponse.modifiedCount === 0) {
-                throw new Error (
+                throw new Error(
                     "Unable to update - user id might not exist.",
                 )
             }
-        
+
             res.json({ status: "success" })
 
         } catch (e) {
@@ -101,12 +101,12 @@ export default class Followers_Data_Controller {
         try {
             const { userId } = req.params;              //id of the person you want to follow - will be in route
             const yourObjId = req.body.follower        //your user id - you are the follower     
-            
+
             const putResponse = await Followers_DAO.putNewFollower(
                 yourObjId,
                 userId,
             )
-            
+
             var { error } = putResponse
             if (error) {
                 res.status(400).json({ error })
@@ -114,11 +114,11 @@ export default class Followers_Data_Controller {
             }
 
             if (putResponse.modifiedCount === 0 && putResponse.matchedCount === 1) {
-                throw new Error (
+                throw new Error(
                     "Unable to put new follower - follower already exists",
                 )
             } else if (putResponse.modifiedCount === 0) {
-                throw new Error (
+                throw new Error(
                     "Unable to put new follower - user may not be the original follower",
                 )
             }
@@ -134,10 +134,10 @@ export default class Followers_Data_Controller {
         try {
             const { userId } = req.params;
             let user = await Followers_DAO.getFollowersByUserId(userId)
-            
+
             if (!user) {
                 throw new Error(
-                    `Unable to get following for user with id ${userId} as it may not exist`
+                    `Unable to get followers for user with id ${userId} as it may not exist`
                 )
             }
             let followersList = user.followers
@@ -147,4 +147,109 @@ export default class Followers_Data_Controller {
             res.status(404).json({ error: e.message })
         }
     }
+
+    /* for logged in user */
+
+    static async apiGetFollowersForLoggedInUser(req, res, next) {
+        try {
+            const userId = res.locals.userId;
+            let user = await Followers_DAO.getFollowersByUserId(userId)
+
+            if (!user) {
+                throw new Error(
+                    `Unable to get followers for user with id ${userId} as it may not exist. Probably you did not follow any users yet`
+                )
+            }
+
+            res.json(user)
+        } catch (e) {
+            res.status(404).json({ error: e.message })
+        }
+    }
+
+    static async apiPutNewFollowersForLoggedInUser(req, res, next) {
+        try {
+            const userId = res.locals.userId;
+            const followersId = req.body.followers;        //id of the user you are followers   
+
+            const putResponse = await Followers_DAO.putNewFollowers(
+                followersId,
+                userId,
+            )
+
+            var { error } = putResponse
+            if (error) {
+                res.status(400).json({ error })
+                return
+            }
+
+            // if (putResponse.modifiedCount === 0 && putResponse.matchedCount === 1) {
+            //     throw new Error (
+            //         "Unable to put new follower - follower already exists",
+            //     )
+            // } else if (putResponse.modifiedCount === 0) {
+            //     throw new Error (
+            //         "Unable to put new follower - user may not be the original follower",
+            //     )
+            // }
+
+            res.json({ status: "success" })
+
+        } catch (e) {
+            res.status(500).json({ error: e.message })
+        }
+    }
+
+    static async apiGetFollowersNumberForLoggedInUser(req, res, next) {
+        try {
+            const userId = res.locals.userId;
+            let user = await Followers_DAO.getFollowersByUserId(userId)
+            // console.log(user)
+            if (!user) {
+                throw new Error(
+                    `Unable to get follower number for user with id ${userId} as it may not exist. Probably you did not follow any users yet`
+                )
+            }
+            let followersList = user.followers
+            let numFollowers = followersList.length
+            res.json(numFollowers)
+        } catch (e) {
+            res.status(404).json({ error: e.message })
+        }
+    }
+
+    static async apiDeleteFollowersForLoggedInUser(req, res, next) {
+        try {
+            const userId = res.locals.userId;
+            const followersId = req.body.followers        //id of the user you are followers   
+
+            const deleteResponse = await Followers_DAO.deleteFollowers(
+                followersId,
+                userId,
+            )
+
+            var { error } = deleteResponse
+            if (error) {
+                res.status(400).json({ error })
+                return
+            }
+
+            if (deleteResponse.modifiedCount === 0 && deleteResponse.matchedCount === 1) {
+                throw new Error(
+                    "Unable to delete follower - follower does not exist",
+                )
+            } else if (deleteResponse.modifiedCount === 0) {
+                throw new Error(
+                    "Unable to delete follower - user may not be the original follower",
+                )
+            }
+
+            res.json({ status: "success" })
+
+        } catch (e) {
+            res.status(500).json({ error: e.message })
+        }
+    }
+
+
 }
