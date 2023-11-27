@@ -90,45 +90,39 @@ export default class Following_DAO {
     // 2. check if followingId is already followed, if so throw error "already followed"
     // 3. add new follower to user's followers array
     static async putNewFollowing(followingId, userId) {
-        // 0. check input validity
-        try {
-            userId = new ObjectId(userId);
-            followingId = new ObjectId(followingId);
-            console.log("My user ID = " + userId);
-        } catch (e) {
-            console.error('Invalid user id given: ' + e);
-            return { error: 'Invalid user id given (both must be 24-digit hex strings)' };
-        }
-        
-        // 1. check if user exists, if not create new entry
-        let userDoc = await following_data.findOne({ user: userId });
-        if (!userDoc) {
-            await this.addFollowingEntryNewUser(userId.toString());
-        }
+      try {
+        userId = new ObjectId(userId);
+        followingId = new ObjectId(followingId);
+        // console.log("My user ID = " + userId);
+      } catch (e) {
+        console.error('Invalid user id given: ' + e);
+        return { error: 'Invalid user id given (both must be 24-digit hex strings)' };
+      }
     
-        // 2. check if followingId is already followed, if so throw error "already followed"
-        const isAlreadyFollowing = await following_data.countDocuments({
-            user: userId,
-            follows: followingId
-        });
+      // Check if followingId is already followed, if so throw error "already followed"
+      const isAlreadyFollowing = await following_data.countDocuments({
+        user: userId,
+        follows: followingId
+      });
     
-        if (isAlreadyFollowing) {
-            return { error: 'already followed' };
-        }
+      if (isAlreadyFollowing) {
+        return { error: 'already followed' };
+      }
     
-        // 3. add new follower to user's followers array
-        try {
-            const updateResponse = await following_data.updateOne(
-                { user: userId },
-                { $addToSet: { follows: followingId } }
-            );
+      // Add new follower to user's followers array or create new entry if user doesn't exist
+      try {
+        const updateResponse = await following_data.updateOne(
+          { user: userId },
+          { $addToSet: { follows: followingId } },
+          { upsert: true } // This will create a new entry if it doesn't exist
+        );
     
-            console.log(updateResponse);
-            return updateResponse;
-        } catch (e) {
-            console.error('Unable to add new follower: ' + e);
-            return { error: e };
-        }
+        // console.log(updateResponse);
+        return updateResponse;
+      } catch (e) {
+        console.error('Unable to add new follower: ' + e);
+        return { error: e };
+      }
     }
     
 
