@@ -75,6 +75,9 @@ export default class Recipe_posts_DAO {
                 steps: post.steps,
                 ingredients: post.ingredients,
                 totalPrice: post.totalPrice,
+                calories: post.calories,
+                servings: post.servings,
+                cookTime: post.cookTime,
                 photoURLs: post.photoURLs,
                 userId: new ObjectId(userID),
             }
@@ -132,6 +135,9 @@ export default class Recipe_posts_DAO {
                         steps: post.steps,
                         ingredients: post.ingredients,
                         totalPrice: post.totalPrice,
+                        calories: post.calories,
+                        servings: post.servings,
+                        cookTime: post.cookTime,
                         photoURLs: post.photoURLs,
                     }
                 }
