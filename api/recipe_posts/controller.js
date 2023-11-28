@@ -52,6 +52,7 @@ export default class Recipe_Posts_Controller {
     }
 
     static async apiCreatePosts(req, res, next) {
+        console.log("apiCreatePosts")
         try {
             const title = req.body.title
             const description = req.body.description
@@ -75,6 +76,7 @@ export default class Recipe_Posts_Controller {
                 photoURLs: photoURLs,
             }
             const userId = res.locals.userId
+            console.log("userId from apiCreatePosts" + userId)
 
             const postResponse = await Recipe_posts_DAO.addPost(
                 post,

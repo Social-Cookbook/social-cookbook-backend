@@ -68,6 +68,7 @@ export default class Recipe_posts_DAO {
     }
 
     static async addPost(post, userID) {
+        console.log("User ID from addPost" + userID)
         try {
             const new_post = {
                 title: post.title,
