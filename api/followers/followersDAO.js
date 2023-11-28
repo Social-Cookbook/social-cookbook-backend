@@ -5,7 +5,7 @@ let followers_data
 
 export default class Followers_DAO {
     static async injectDB(conn) {
-        if(followers_data) {
+        if (followers_data) {
             return
         }
 
@@ -45,7 +45,7 @@ export default class Followers_DAO {
             const userFollowersList = await displayCursor.toArray()
             const numUsers = await followers_data.countDocuments(query)
 
-            return { userFollowersList, numUsers}
+            return { userFollowersList, numUsers }
         } catch (e) {
             console.error('Unable to convert cursor to array or problem counting documents, ${e}')
             return { userFollowersList: [], numUsers: 0 }
@@ -58,7 +58,7 @@ export default class Followers_DAO {
         } catch (e) {
             console.error('Invalid user id given: ' + e)
         }
-        const query = { "user" : userObjId}
+        const query = { "user": userObjId }
         try {
             return await followers_data.findOne(query)
         } catch (e) {
@@ -79,7 +79,7 @@ export default class Followers_DAO {
             return await followers_data.insertOne(new_entry)
         } catch (e) {
             console.error('Unable to create new follower entry')
-            return { error : e }
+            return { error: e }
         }
     }
 
@@ -109,10 +109,45 @@ export default class Followers_DAO {
         }
     }
 
-    static async putNewFollower(yourId, userId) {
+    static async putNewFollowers(yourId, userId) {
+        try {
+            userId = new ObjectId(userId);
+            yourId = new ObjectId(yourId);
+        } catch (e) {
+            console.error('Invalid user id given: ' + e);
+            return { error: 'Invalid user id given (both must be 24-digit hex strings)' };
+        }
+
+        // Check if 'yourId' is already in 'userId's followers array
+        const isAlreadyFollower = await followers_data.countDocuments({
+            user: userId,
+            followers: yourId
+        });
+
+        if (isAlreadyFollower) {
+            // If 'yourId' is already a follower, there's no need to add them again
+            return { error: 'Already followed' };
+        }
+
+        try {
+            const updateResponse = await followers_data.updateOne(
+                { user: userId },
+                { $addToSet: { followers: yourId } },
+                { upsert: true } // Creates a new document if one doesn't exist
+            );
+
+            console.log(updateResponse);
+            return updateResponse;
+        } catch (e) {
+            console.error('Unable to add new follower: ' + e);
+            return { error: e };
+        }
+    }
+
+    static async deleteFollowers(followerId, userId) {
         try {
             userId = new ObjectId(userId)
-            yourId = new ObjectId(yourId)
+            followerId = new ObjectId(followerId)
         } catch (e) {
             console.error('Invalid user id given: ' + e)
             return { error: 'Invalid user id given (both must be 24-digit hex strings)' }
@@ -123,23 +158,17 @@ export default class Followers_DAO {
                     user: userId,
                 },
                 {
-                    /*
-                    $push: {
-                        followers: doc.followers,
-                    }
-                    */
-
-                    $addToSet: {
-                        followers: yourId,
+                    $pull: {
+                        followers: followerId,
                     }
                 }
             )
 
-            console.log(updateResponse)
+            // console.log(updateResponse)
             return updateResponse
         } catch (e) {
-            console.error('Unable to add new follower: ' + e)
-            return { error : e }
+            console.error('Unable to delete follower: ' + e)
+            return { error: e }
         }
     }
 }

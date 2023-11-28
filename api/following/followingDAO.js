@@ -85,7 +85,48 @@ export default class Following_DAO {
         }
     }
 
+    // 0. check input validity
+    // 1. check if user exists, if not create new entry
+    // 2. check if followingId is already followed, if so throw error "already followed"
+    // 3. add new follower to user's followers array
     static async putNewFollowing(followingId, userId) {
+      try {
+        userId = new ObjectId(userId);
+        followingId = new ObjectId(followingId);
+        // console.log("My user ID = " + userId);
+      } catch (e) {
+        console.error('Invalid user id given: ' + e);
+        return { error: 'Invalid user id given (both must be 24-digit hex strings)' };
+      }
+    
+      // Check if followingId is already followed, if so throw error "already followed"
+      const isAlreadyFollowing = await following_data.countDocuments({
+        user: userId,
+        follows: followingId
+      });
+    
+      if (isAlreadyFollowing) {
+        return { error: 'already followed' };
+      }
+    
+      // Add new follower to user's followers array or create new entry if user doesn't exist
+      try {
+        const updateResponse = await following_data.updateOne(
+          { user: userId },
+          { $addToSet: { follows: followingId } },
+          { upsert: true } // This will create a new entry if it doesn't exist
+        );
+    
+        // console.log(updateResponse);
+        return updateResponse;
+      } catch (e) {
+        console.error('Unable to add new follower: ' + e);
+        return { error: e };
+      }
+    }
+    
+
+    static async deleteFollowing (followingId, userId) {
         try {
             userId = new ObjectId(userId)
             followingId = new ObjectId(followingId)
@@ -99,13 +140,7 @@ export default class Following_DAO {
                     user: userId,
                 },
                 {
-                    /*
-                    $push: {
-                        followers: doc.followers,
-                    }
-                    */
-
-                    $addToSet: {
+                    $pull: {
                         follows: followingId,
                     }
                 }
@@ -114,7 +149,7 @@ export default class Following_DAO {
             console.log(updateResponse)
             return updateResponse
         } catch (e) {
-            console.error('Unable to add new follower: ' + e)
+            console.error('Unable to delete follower: ' + e)
             return { error : e }
         }
     }
