@@ -124,8 +124,10 @@ export default class User_Data_Controller{
 
         try {
             const userId = res.locals.userId;
-						const passedInUserId = req.params.userId;
-						let user = await UserDataDAO.getUserPageInfoById(passedInUserId ? passedInUserId : userId, passedInUserId == userId || !passedInUserId, userId);
+						const passedInUsername = req.params.username;
+						const currentUser = await UserDataDAO.getUserById(userId);
+						const currentUsername = currentUser.username;
+						let user = await UserDataDAO.getUserPageInfoById(passedInUsername ? passedInUsername : currentUsername, passedInUsername == currentUsername || !passedInUsername, userId);
             
             if (!user) {
                 throw new Error(

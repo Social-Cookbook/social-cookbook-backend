@@ -73,6 +73,16 @@ export default class UserDataDAO {
         }
     }
 
+		static async getUserByUsername(username) {
+			const query = { "username" :  username}
+			try {
+					return await user_data.findOne(query)
+			} catch (e) {
+					console.error(`Unable to issue find command: ${e}`)
+					return []
+			}
+		}
+
     static async addUser(user){
         try{
             const newUser = {
@@ -117,8 +127,9 @@ export default class UserDataDAO {
         }
     }
 
-    static async getUserPageInfoById(userId, isCurrentUser, currentUserId) {
-        let user = await this.getUserById(userId);
+    static async getUserPageInfoById(username, isCurrentUser, currentUserId) {
+        let user = await this.getUserByUsername(username);
+				let userId = user._id;
         let user_followers = await Followers_DAO.getFollowersByUserId(userId)
         let user_following = await Following_DAO.getFollowingByUserId(userId)
         let numFollowers
@@ -152,6 +163,7 @@ export default class UserDataDAO {
             num_posts : numPosts,
 						is_current_user: isCurrentUser,
 						follows: user_followers.followers.some(val => val.toString() == currentUserId),
+						user_id: userId,
         }
         return userInfo;
     }
