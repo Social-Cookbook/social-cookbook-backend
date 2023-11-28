@@ -169,8 +169,8 @@ export default class Followers_Data_Controller {
 
     static async apiPutNewFollowersForLoggedInUser(req, res, next) {
         try {
-            const userId = res.locals.userId;
-            const followersId = req.body.followers;        //id of the user you are followers   
+            const followersId = res.locals.userId;
+            const userId = req.body.followers;        //id of the user you are followers   
 
             const putResponse = await Followers_DAO.putNewFollowers(
                 followersId,
