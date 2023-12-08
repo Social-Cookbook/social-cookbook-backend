@@ -50,3 +50,5 @@ MongoClient.connect(process.env.SC_DB_URI, {
       console.log(`listening on port ${port}`);
     });
   });
+
+	module.exports = app;
