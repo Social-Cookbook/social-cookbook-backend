@@ -51,4 +51,4 @@ MongoClient.connect(process.env.SC_DB_URI, {
     });
   });
 
-	module.exports = app;
+export default app;
